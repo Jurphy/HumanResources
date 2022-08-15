@@ -1,25 +1,24 @@
 <template>
   <div id="app">
-    <router-view />
+    <!-- <router-view /> -->
+    <MyPagination :total="30" :current-page="currentPage" @changeCurrentPage="changeCurrentPage" />
   </div>
 </template>
 
 <script>
+import MyPagination from '@/components/MyComponent/index.vue'
 export default {
+  components: {
+    MyPagination
+  },
   data() {
     return {
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4
+      currentPage: 1
     }
   },
   methods: {
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`)
+    changeCurrentPage(val) {
+      this.currentPage = val
     }
   }
 }
