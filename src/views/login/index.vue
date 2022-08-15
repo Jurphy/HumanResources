@@ -1,14 +1,27 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" class="login-form" label-position="left">
+    <el-form ref="loginForm" class="login-form" label-position="left" :model="loginForm" :rules="rules">
 
       <div class="title-container">
         <h3 class="title">
           <img src="@/assets/common/login-logo.png" alt="">
         </h3>
       </div>
+      <el-form-item prop="mobile">
+        <span class="svg-container el-icon-user-solid" />
+        <el-input v-model="loginForm.mobile" placeholder="请输入手机号" />
+      </el-form-item>
+      <el-form-item prop="password">
+        <span class="svg-container">
+          <svg-icon icon-class="password" />
+        </span>
+        <el-input ref="pwdInput" v-model="loginForm.password" placeholder="请输入密码" :type="typePassword" />
+        <span class="svg-container">
+          <svg-icon :icon-class="`${typePassword === 'password' ? 'eye' : 'eye-open'}`" @click="changePwd" />
+        </span>
+      </el-form-item>
 
-      <el-button type="primary" class="loginBtn" style="width:100%;margin-bottom:30px;">登录</el-button>
+      <el-button type="primary" :loading="loading" class="loginBtn" style="width:100%;margin-bottom:30px;" @click="loginBtn">登录</el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">账号: 13800000002</span>
@@ -19,12 +32,60 @@
   </div>
 </template>
 <script>
+import { validMObile } from '@/utils/validate'
 export default {
   name: 'Login',
   data() {
-    return {}
+    const validateMobile = (rule, value, callback) => {
+      if (validMObile(value)) {
+        return callback()
+      }
+      return callback(new Error('手机号格式不正确'))
+    }
+    return {
+      typePassword: 'password',
+      loginForm: {
+        mobile: '13800000002',
+        password: '123456'
+      },
+      rules: {
+        mobile: [
+          { required: true, message: '手机号码必填', trigger: 'blur' },
+          // { pattern: /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/, message: '手机号码格式不正确', trigger: 'blur' }
+          { validator: validateMobile, trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '手机密码必填', trigger: 'blur' },
+          { min: 6, max: 16, message: '手机密码格式不正确', trigger: 'blur' }
+        ]
+      },
+      loading: false
+    }
   },
-  methods: {}
+  methods: {
+    changePwd() {
+      this.typePassword === 'password' ? this.typePassword = '' : this.typePassword = 'password'
+      this.$nextTick(() => {
+        this.$refs.pwdInput.focus()
+      })
+    },
+    async loginBtn() {
+      try {
+        await this.$refs.loginForm.validate()
+        this.loading = true
+        await this.$store.dispatch('user/login', this.loginForm)
+        this.$router.push('/')
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.loading = false
+      }
+      // 第二种写法  validate 可以直接接收一个回调函数
+      // this.$refs.loginForm.validate(valid => {
+      //   console.log(valid)
+      // })
+    }
+  }
 }
 </script>
 
