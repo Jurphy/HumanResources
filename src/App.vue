@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import MyPagination from '@/components/MyComponent/index.vue'
+import MyPagination from '@/components/MyComponent/pagination/index.vue'
 export default {
   components: {
     MyPagination
