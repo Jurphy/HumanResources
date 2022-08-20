@@ -11,7 +11,8 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img
-            src="http://destiny001.gitee.io/image/monkey_02.jpg"
+            v-imgerror="defaultImg"
+            :src="staffPhoto"
             class="user-avatar"
           >
           <span>{{ username }}</span>
@@ -22,7 +23,7 @@
             <el-dropdown-item>Home</el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display: block">Log Out</span>
+            <span style="display: block">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -34,6 +35,7 @@
 <script>
 import { mapGetters } from 'vuex'
 // import Breadcrumb from '@/components/Breadcrumb'
+import defaultImg from '@/assets/common/head.jpg'
 import Hamburger from '@/components/Hamburger'
 
 export default {
@@ -41,11 +43,17 @@ export default {
     // Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      defaultImg
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'username'
+      'username',
+      'staffPhoto'
     ])
   },
   methods: {
@@ -54,7 +62,7 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      this.$router.push(`/login`)
     }
   }
 }
@@ -125,6 +133,12 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
+        span {
+          display: inline-block;
+          height: 40px;
+          line-height: 40px;
+          margin-top: 5px;
+        }
 
         .user-avatar {
           cursor: pointer;
