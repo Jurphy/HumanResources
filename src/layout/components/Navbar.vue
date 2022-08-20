@@ -20,7 +20,7 @@
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
-            <el-dropdown-item>Home</el-dropdown-item>
+            <el-dropdown-item>首页</el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">
             <span style="display: block">退出登录</span>
@@ -137,7 +137,8 @@ export default {
           display: inline-block;
           height: 40px;
           line-height: 40px;
-          margin-top: 5px;
+          text-align: center;
+          margin: 5px;
         }
 
         .user-avatar {
