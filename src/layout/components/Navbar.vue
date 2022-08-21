@@ -15,7 +15,7 @@
             :src="staffPhoto"
             class="user-avatar"
           >
-          <span>{{ username }}</span>
+          <span class="user-name">{{ username }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -60,6 +60,7 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
+    // 退出登录
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login`)
@@ -133,12 +134,9 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
-        span {
+        .user-name {
           display: inline-block;
-          height: 40px;
-          line-height: 40px;
-          text-align: center;
-          margin: 5px;
+          color: #fff;
         }
 
         .user-avatar {
@@ -146,13 +144,15 @@ export default {
           width: 40px;
           height: 40px;
           border-radius: 10px;
+          float: left;
+          margin-right: 10px;
         }
 
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          top: 20px;
+          top: 18px;
           font-size: 12px;
         }
       }

@@ -12,19 +12,22 @@ function IsCheckTimeOut() {
   var timeStamp = store.getters.hrsaasTime // 缓存时间戳
   return (currentTime - timeStamp) / 1000 > TimeOut
 }
+// 创建了一个新的axios实例service
 const service = axios.create({
+  // baseURL: '/api',
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 5000 // request timeout超时时间
 })
 
-// request interceptor
+// request interceptor请求拦截器主要处理 token的统一注入问题
 service.interceptors.request.use(config => {
+  // token存在
   if (store.getters.token) {
     if (IsCheckTimeOut()) {
       // 如果它为true表示 过期了
       // token没用了 因为超时了
-      store.dispatch('user/logout') // 登出操作
+      store.dispatch('user/logout') // 登出操作 清除本地的token
       // 跳转到登录页
       router.push('/login')
       return Promise.reject(new Error('token超时了'))
@@ -37,7 +40,7 @@ service.interceptors.request.use(config => {
   Message.error(error.message)
   return Promise.reject(error)
 })
-
+// 响应拦截器
 service.interceptors.response.use((response) => {
   const { success, message, data } = response.data
   if (success) {
@@ -56,4 +59,4 @@ service.interceptors.response.use((response) => {
   }
   return Promise.reject(err)
 })
-export default service
+export default service// 导出axios实例

@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 /**
- * 登录
- * @param {*} data
- * @returns
+ * 提交用户登录
+ * @param {Object} data
+ * @returns Permise
  */
 export function login(data) {
   return request({
