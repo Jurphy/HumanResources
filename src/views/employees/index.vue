@@ -4,7 +4,7 @@
       <span slot="before">共{{ total }}条记录</span>
       <template slot="after">
         <el-button size="small" type="warning" @click="$router.push('/import?type=user')">导入</el-button>
-        <el-button size="small" type="danger">导出</el-button>
+        <el-button size="small" type="danger" @click="exportData">导出</el-button>
         <el-button size="small" type="primary" @click="handleAdd">新增员工</el-button>
       </template>
     </PageTools>
@@ -49,6 +49,7 @@
 <script>
 import { getEmployeeList, delEmployee } from '@/api'
 import addEmployee from './components/add-employee'
+import { formatDate } from '@/filters'
 // 引入员工的枚举常量
 import Employees from '@/api/constant/employees'
 export default {
@@ -117,6 +118,55 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+    async exportData() {
+      const headers = {
+        '姓名': 'username',
+        '手机号': 'mobile',
+        '入职日期': 'timeOfEntry',
+        '聘用形式': 'formOfEmployment',
+        '转正日期': 'correctionTime',
+        '工号': 'workNumber',
+        '部门': 'departmentName'
+      }
+      import('@/vendor/Export2Excel').then(async excel => {
+        // 1、获取需要导出的数据
+        const { rows } = await getEmployeeList({ page: 1, size: this.page.total })
+        // 2、调用自己封装的方法进行数据的转化
+        const data = this.fromJson(headers, rows)
+        const multiHeader = [['姓名', '主要信息', '', '', '', '', '']]
+        const merges = ['A1:A2', 'B1:G1']
+
+        // 将后端放回的数据 转换成 到出excel写入的数据
+        // [{correctionTime: "2018-11-30", departmentName: "总裁办",formOfEmployment: "1",mobile: "13800000002",timeOfEntry: "2018-11-02",username: "管理员"}]
+        // [['张三', '13800000002', '2018-11-02', '1', '2018-11-30', ....]]
+
+        excel.export_json_to_excel({
+          header: Object.keys(headers), // 表头数组 -> ['姓名', '手机号', '入职日期', '聘用形式', ....]
+          data, // [['13399999', '张三', '2020-2020-2020', '2020', '79119'],[],[],[],[],[],[]]
+          filename: '员工信息表',
+          autoWidth: true,
+          bookType: 'xlsx',
+          multiHeader, // 复杂表头
+          merges // 合并选项
+        })
+      })
+    },
+    fromJson(headers, rows) {
+      const result = rows.map(item => {
+        return Object.keys(headers).map(key => {
+          if (headers[key] === 'timeOfEntry' || headers[key] === 'correctionTime') {
+            // 格式化日期 -> 已经定义过过滤器直接使用即可
+            return formatDate(item[headers[key]])
+          } else if (headers[key] === 'formOfEmployment') {
+            // 需要引入EmployeeEnum常量进行处理
+            const obj = Employees.hireType.find(obj => obj.id === item[headers[key]])
+            return obj ? obj.value : '未知'
+          }
+          return item[headers[key]]
+        })
+      })
+      return result
     }
 
   }
