@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ username }}</div>
+    <UploadExcel />
   </div>
 </template>
 
@@ -9,6 +10,9 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'Dashboard',
+  // components: {
+  //   UploadExcel
+  // },
   // direactives 局部注册自定义指令
   // directives: {
   //   // key: value
