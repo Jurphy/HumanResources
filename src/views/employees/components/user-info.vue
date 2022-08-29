@@ -1,5 +1,14 @@
 <template>
   <div class="user-info">
+    <!-- 打印 -->
+    <el-row type="flex" justify="end">
+      <el-tooltip content="打印个人基本信息">
+        <router-link :to="`/employees/print/${userId}?type=personal`">
+          <i class="el-icon-printer" />
+        </router-link>
+      </el-tooltip>
+    </el-row>
+
     <!-- 个人信息 -->
     <el-form label-width="220px">
       <!-- 工号 入职时间 -->
@@ -58,7 +67,7 @@
         <el-col :span="12">
           <el-form-item label="员工头像">
             <!-- 放置上传图片 -->
-
+            <ImageUpload ref="emplyeesHeader" @onSuccess="headeSucess" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -90,6 +99,7 @@
 
         <el-form-item label="员工照片">
           <!-- 放置上传图片 -->
+          <ImageUpload ref="emplyeesPic" @onSuccess="PicSucess" />
         </el-form-item>
         <el-form-item label="国家/地区">
           <el-select v-model="formData.nationalArea" class="inputW2">
@@ -246,7 +256,7 @@
         <el-form-item label="入学时间">
           <el-date-picker v-model="formData.enrolmentTime" type="data" placeholder="请输入时间" class="inputW" value-format="yyyy-MM-dd" />
         </el-form-item>
-        <!-- <el-form-item label="入党时间">
+        <el-form-item label="入党时间">
           <el-date-picker
             v-model="formData.timeToJoinTheParty"
             type="date"
@@ -254,9 +264,15 @@
             class="inputW"
             value-format="yyyy-MM-dd"
           />
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="毕业时间">
-          <el-date-picker v-model="formData.graduationTime" type="data" placeholder="请输入时间" class="inputW" value-format="yyyy-MM-dd" />
+          <el-date-picker
+            v-model="formData.graduationTime"
+            type="data"
+            placeholder="请输入时间"
+            class="inputW"
+            value-format="yyyy-MM-dd"
+          />
         </el-form-item>
         <el-form-item label="专业">
           <el-input v-model="formData.major" placeholder="请输入" class="inputW" />
@@ -373,14 +389,30 @@ export default {
     // 读取用户详情的基础信息
     async getPersonalDetail() {
       this.formData = await getPersonalDetail(this.userId)
+      // 图片回显
+      this.$refs.emplyeesPic.filelist = [{ url: this.formData.staffPhoto }]
     },
     async savePersonal() {
       await updatePersonal(this.formData)
       this.$message.success('更新成功')
     },
     async saveUser() {
+      // 判断一下图片是否在上传过程中
+      if (this.$refs.emplyeesPic.loading) {
+        return this.$message.error('图片正在上传中')
+      }
       await saveUserDetailById(this.userInfo)
       this.$message.success('更新成功')
+    },
+    setImageUrl(staffPhoto) {
+      this.$refs.emplyeesHeader.filelist = [{ url: staffPhoto }]
+    },
+    headeSucess({ url }) {
+      this.userInfo.staffPhoto = url
+    },
+    PicSucess({ url }) {
+      // 赋值地址
+      this.formData.staffPhoto = url
     }
 
   }

@@ -2,6 +2,8 @@
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ username }}</div>
     <UploadExcel />
+    <ImageUpload :before-upload-ckecked="beforeUploadCkecked" @onSuccess="handleSuccess" />
+
   </div>
 </template>
 
@@ -37,6 +39,14 @@ export default {
     ...mapGetters([
       'username'
     ])
+  },
+  methods: {
+    beforeUploadCkecked(file) {
+      return false
+    },
+    handleSuccess({ url }) {
+      console.log(url)
+    }
   }
 
 }

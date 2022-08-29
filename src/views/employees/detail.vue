@@ -67,6 +67,7 @@ export default {
     async getUserDetailById() {
       this.userInfo = await getUserDetailById(this.userId)
       this.$refs.userInfoRef.userInfo = { ...this.userInfo }
+      this.$refs.userInfoRef.setImageUrl(this.userInfo.staffPhoto)
     },
     // 岗位信息
     async updateUserInfo() {

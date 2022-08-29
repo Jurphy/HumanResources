@@ -11,31 +11,42 @@
     <el-card>
       <el-table v-loading="loading" border :data="employeeList">
         <el-table-column label="序号" sortable="" width="80" type="index" />
-        <el-table-column label="姓名" prop="username">
-          <el-table-column label="工号" prop="workNumber" />
-          <el-table-column label="聘用形式" prop="formOfEmployment" :formatter="formatterFn" />
-          <el-table-column label="部门" prop="departmentName" />
-          <el-table-column label="入职时间" sortable="" prop="timeOfEntry">
-            <template slot-scope="scope">
-              {{ scope.row.timeOfEntry | formatDate }}
-            </template>
-          </el-table-column>
-          <el-table-column label="账户状态" prop="enableState">
-            <template slot-scope="{row}">
-              <el-switch :value="row.enableState === 1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" fixed="right" width="280">
-            <template slot-scope="{row}">
-              <el-button type="text" size="small" @click="$router.push(`/employees/detail/${row.id}`)">查看</el-button>
-              <el-button type="text" size="small">转正</el-button>
-              <el-button type="text" size="small">调岗</el-button>
-              <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
-              <el-button type="text" size="small" @click="delemploy(row.id)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table-column></el-table>
+        <el-table-column label="姓名" prop="username" />
+        <el-table-column label="头像" prop="username">
+          <template slot-scope="{row}">
+            <img
+              v-imgerror="require('@/assets/common/bigUserHeader.png')"
+              :src="row.staffPhoto"
+              alt=""
+              style="border-radius: 50%; width: 100px; height: 100px; padding: 10px;"
+              @click="showCodeDialog(row.staffPhoto)"
+            >
+          </template>
+        </el-table-column>
+        <el-table-column label="工号" prop="workNumber" />
+        <el-table-column label="聘用形式" prop="formOfEmployment" :formatter="formatterFn" />
+        <el-table-column label="部门" prop="departmentName" />
+        <el-table-column label="入职时间" sortable="" prop="timeOfEntry">
+          <template slot-scope="scope">
+            {{ scope.row.timeOfEntry | formatDate }}
+          </template>
+        </el-table-column>
+        <el-table-column label="账户状态" prop="enableState">
+          <template slot-scope="{row}">
+            <el-switch :value="row.enableState === 1" />
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" fixed="right" width="280">
+          <template slot-scope="{row}">
+            <el-button type="text" size="small" @click="$router.push(`/employees/detail/${row.id}`)">查看</el-button>
+            <el-button type="text" size="small">转正</el-button>
+            <el-button type="text" size="small">调岗</el-button>
+            <el-button type="text" size="small">离职</el-button>
+            <el-button type="text" size="small">角色</el-button>
+            <el-button type="text" size="small" @click="delemploy(row.id)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
       <!-- 分页组件 -->
       <el-row type="flex" justify="end" align="middle" style="height: 60px">
         <el-pagination v-if="total > 0" background="" layout="total,prev, pager, next,sizes" :current-page.sync="page.page" :page-size.sync="page.size" :page-sizes="[5,10,20,30,]" :total="total" @current-change="getEmployeeList" @size-change="getEmployeeList" />
@@ -43,6 +54,10 @@
     </el-card>
     <addEmployee :visible-dialog.sync="visibleDialog" @refreshemployess="getEmployeeList" />
     <!-- .sync 会解析成  :visible-dialog="visibleDialog" 和 @update:visibleDialog="把子组件传递过来的值 赋值给visibleDialog"-->
+    <el-dialog title="二维码" :visible.sync="erCodeDialog" custom-class="canvaseq">
+      <canvas id="canvas" />
+    </el-dialog>
+
   </div>
 </template>
 
@@ -52,6 +67,7 @@ import addEmployee from './components/add-employee'
 import { formatDate } from '@/filters'
 // 引入员工的枚举常量
 import Employees from '@/api/constant/employees'
+import QrCode from 'qrcode'
 export default {
   name: 'Hrsaas1Index',
   components: {
@@ -67,7 +83,8 @@ export default {
       employeeList: [],
       total: 0,
       loading: false,
-      visibleDialog: false
+      visibleDialog: false,
+      erCodeDialog: false
 
     }
   },
@@ -167,12 +184,21 @@ export default {
         })
       })
       return result
+    },
+    async showCodeDialog(staffPhoto) {
+      if (!staffPhoto) return this.$$message.console.error('该用户还没有设置头像')
+      this.erCodeDialog = true
+      await this.$nextTick()
+      const dom = document.querySelector('#canvas')
+      QrCode.toCanvas(dom, staffPhoto)
     }
 
   }
 }
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+.canvaseq .el-dialog__body {
+  text-align: center;
+}
 </style>

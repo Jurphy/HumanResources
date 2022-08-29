@@ -24,6 +24,9 @@ Vue.use(components)
 // Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)
 Vue.config.productionTip = false
+
+import Print from 'vue-print-nb'
+Vue.use(Print)
 // 注册自定义指令
 // 遍历所有的导出的指令对象 完成自定义全局注册
 import * as directives from '@/directives'
