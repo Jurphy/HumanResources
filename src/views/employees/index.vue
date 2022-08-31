@@ -42,7 +42,7 @@
             <el-button type="text" size="small">转正</el-button>
             <el-button type="text" size="small">调岗</el-button>
             <el-button type="text" size="small">离职</el-button>
-            <el-button type="text" size="small">角色</el-button>
+            <el-button type="text" size="small" @click="addRole(row.id)">角色</el-button>
             <el-button type="text" size="small" @click="delemploy(row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -57,7 +57,8 @@
     <el-dialog title="二维码" :visible.sync="erCodeDialog" custom-class="canvaseq">
       <canvas id="canvas" />
     </el-dialog>
-
+    <AssignRole ref="asRoles" v-model="assignRoleDiplog" :current-user-id="currentUserId" />
+    <!-- v-model可以解析为v-bind:value="" @input="value" -->
   </div>
 </template>
 
@@ -68,10 +69,12 @@ import { formatDate } from '@/filters'
 // 引入员工的枚举常量
 import Employees from '@/api/constant/employees'
 import QrCode from 'qrcode'
+import AssignRole from './components/assign-role.vue'
 export default {
   name: 'Hrsaas1Index',
   components: {
-    addEmployee
+    addEmployee,
+    AssignRole
   },
 
   data() {
@@ -84,7 +87,9 @@ export default {
       total: 0,
       loading: false,
       visibleDialog: false,
-      erCodeDialog: false
+      erCodeDialog: false,
+      assignRoleDiplog: false,
+      currentUserId: ''
 
     }
   },
@@ -191,6 +196,11 @@ export default {
       await this.$nextTick()
       const dom = document.querySelector('#canvas')
       QrCode.toCanvas(dom, staffPhoto)
+    },
+    addRole(id) {
+      this.currentUserId = id
+      this.$refs.asRoles.getRoleList()
+      this.assignRoleDiplog = true
     }
 
   }
