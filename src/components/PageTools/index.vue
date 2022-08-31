@@ -3,7 +3,7 @@
     <el-card>
       <el-row type="flex" justify="space-between" align="middle">
         <el-col>
-          <div :class="`before ${type}`">
+          <div v-if="showPage" :class="`before ${type}`">
             <i v-if="showIcon" :class="`el-icon-${type}`" />
             <slot name="before" />
           </div>
@@ -36,6 +36,10 @@ export default {
       }
     },
     showIcon: {
+      type: Boolean,
+      default: true
+    },
+    showPage: {
       type: Boolean,
       default: true
     }
