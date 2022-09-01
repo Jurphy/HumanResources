@@ -13,7 +13,10 @@ router.beforeEach(async(to, from, next) => {
   if (store.getters.token) {
     // 如果没有用户信息就调用getUserInfo
     if (!store.getters.userId) {
-      await store.dispatch('user/getUserInfo')
+      const { roles: { menus }} = await store.dispatch('user/getUserInfo')
+      // 触发permission中的filterRoutes，把请求来的菜单项menus的值传过去
+      store.dispatch('permission/filterRoutes', menus)
+      next(to.path)// 手动去下一个页面
     }
     if (to.path === '/login') {
       next('/')// 跳到主页

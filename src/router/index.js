@@ -14,7 +14,7 @@ import attendancesRouter from './modules/attendances'
 import salarysRouter from './modules/salarys'
 import departmentsRouter from './modules/departments'
 
-const asyncRoutes = [employeesRouter, settingRouter, permission, socialRouter, approvalsRouter, attendancesRouter, salarysRouter, departmentsRouter]
+export const asyncRoutes = [employeesRouter, settingRouter, permission, socialRouter, approvalsRouter, attendancesRouter, salarysRouter, departmentsRouter]
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -73,24 +73,25 @@ export const constantRoutes = [
       component: () => import('@/views/dashboard/index'),
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
-  },
+  }
   // ...asyncRoutes,
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: [...constantRoutes, ...asyncRoutes]
+  // routes: [...constantRoutes, ...asyncRoutes]
+  routes: [...constantRoutes]
 })
 
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
-export function resetRouter() {
+export function resetRouter() { // 退出重新匹配路由
   const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  router.matcher = newRouter.matcher // reset router把新的路由给router
 }
 
 export default router

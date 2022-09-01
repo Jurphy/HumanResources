@@ -1,4 +1,5 @@
 import { login, getUserInfo, getUserDetailById } from '@/api'
+import { resetRouter } from '@/router'
 // 获取cookie 中的方法
 import { setToken, getToken, removeToken } from '@/utils/auth'
 export default {
@@ -60,6 +61,9 @@ export default {
       context.commit('removeToken') // 不仅仅删除了vuex中的 还删除了缓存中的
       // 删除用户资料
       context.commit('removeUserInfo') // 删除用户信息
+      // 重置路由
+      resetRouter()
+      context.commit('permission/setRoures', [], { root: true })
     }
 
   },

@@ -30,8 +30,9 @@ export default {
     ...mapGetters([
       'sidebar'
     ]),
+    // 显示权限中的路由
     routes() {
-      return this.$router.options.routes
+      return this.$store.state.permission.routes
     },
     activeMenu() {
       const route = this.$route

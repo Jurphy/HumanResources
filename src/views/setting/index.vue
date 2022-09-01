@@ -39,7 +39,7 @@
             width="310"
           >
             <template slot-scope="scope">
-              <el-button type="success" size="medium">分配权限</el-button>
+              <el-button type="success" size="medium" @click="assgin(scope.row)">分配权限</el-button>
               <el-button type="primary" size="medium" @click="edit(scope.row)">编辑</el-button>
               <el-button type="danger" size="medium" @click="del(scope.row.id)">删除</el-button>
             </template>
@@ -93,6 +93,7 @@
     </el-tabs>
     <!-- 添加角色的弹框 -->
     <roleDialog ref="roleDialog" :dialog-visible.sync="dialogVisible" />
+    <ManagerPermission ref="managerPermission" :dialog-visible.sync="visibleDialog" />
   </div>
 </template>
 
@@ -100,10 +101,12 @@
 import { getRole, deleteRole, getCompanyInfo } from '@/api'
 import roleDialog from './components/roleDialog'
 import { mapGetters } from 'vuex'
+import ManagerPermission from './components/manager-permission.vue'
 export default {
   name: 'Hrsaas1Index',
   components: {
-    roleDialog
+    roleDialog,
+    ManagerPermission
   },
   data() {
     return {
@@ -118,7 +121,8 @@ export default {
       total: 0, // 总条数
       loading: false,
       dialogVisible: false,
-      formData: {}
+      formData: {},
+      visibleDialog: false
 
     }
   },
@@ -178,6 +182,10 @@ export default {
     },
     async getCompanyInfo() {
       this.formData = await getCompanyInfo(this.companyId)
+    },
+    async assgin(row) {
+      this.visibleDialog = true
+      await this.$refs.managerPermission.getPermissionList(row.id)
     }
   }
 }
