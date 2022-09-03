@@ -133,7 +133,7 @@ export default {
     },
     async delemploy(id) {
       try {
-        await this.$confirm('确认删除吗？', '提示', { type: 'warning' })
+        await this.$confirm('确认删除吗？', '提示', { type: 'warning', center: true })
         await delEmployee(id)
         this.$message.success('删除成功')
         this.getEmployeeList()

@@ -15,11 +15,14 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 import components from '@/components'
+import myMixin from '@/mixin/checkPermission'
 // if (process.env.NODE_ENV === 'production') {
 //   const { mockXHR } = require('../mock')
 //   mockXHR()
 // }
 Vue.use(components)
+// 全局引入混入
+Vue.mixin(myMixin)
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)
