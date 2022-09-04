@@ -1,39 +1,20 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import approvalsRouter from './modules/approvals'
+import departmentsRouter from './modules/departments'
+import employeesRouter from './modules/employees'
+import permissionRouter from './modules/permission'
+import attendancesRouter from './modules/attendances'
+import salarysRouter from './modules/salarys'
+import settingRouter from './modules/setting'
+import socialRouter from './modules/social'
+
+export const asyncRoutes = [approvalsRouter, departmentsRouter, employeesRouter, permissionRouter, attendancesRouter, salarysRouter, settingRouter, socialRouter]
 
 Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-import approvalsRouter from './modules/approvals'
-import employeesRouter from './modules/employees'
-import settingRouter from './modules/setting'
-import permission from './modules/permission'
-import socialRouter from './modules/social'
-import attendancesRouter from './modules/attendances'
-import salarysRouter from './modules/salarys'
-import departmentsRouter from './modules/departments'
-
-export const asyncRoutes = [employeesRouter, settingRouter, permission, socialRouter, approvalsRouter, attendancesRouter, salarysRouter, departmentsRouter]
-
-/**
- * Note: sub-menu only appear when route children.length >= 1
- * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
- *
- * hidden: true                   if set true, item will not show in the sidebar(default is false)
- * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route,
- *                                it will becomes nested mode, otherwise not show the root menu
- * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
- * name:'router-name'             the name is used by <keep-alive> (must set!!!)
- * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
-    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
-    icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
-    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
-    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
-  }
- */
 
 /**
  * constantRoutes
@@ -50,11 +31,13 @@ export const constantRoutes = [
     path: '/import',
     component: Layout,
     hidden: true,
-    children: [{
-      path: '',
-      name: 'import',
-      component: () => import('@/views/import/index')
-    }]
+    children: [
+      {
+        path: '',
+        name: 'import',
+        component: () => import('@/views/import')
+      }
+    ]
   },
 
   {
@@ -62,10 +45,10 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-
   {
     path: '/',
     component: Layout,
+    // name: 'Dashboard',
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
@@ -74,24 +57,28 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   }
-  // ...asyncRoutes,
+  // ...asyncRouter,
   // 404 page must be placed at the end !!!
   // { path: '*', redirect: '/404', hidden: true }
 ]
+// 思考问题
+// 为什么 icon 可以配置图片
+// 为什么 404 login 没有展示在侧边栏
+// 静态路由 动态路由 现在这样直接混在一起合适吗
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  // routes: [...constantRoutes, ...asyncRoutes]
+  // 临时合并
   routes: [...constantRoutes]
 })
 
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
-export function resetRouter() { // 退出重新匹配路由
+export function resetRouter() {
   const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router把新的路由给router
+  router.matcher = newRouter.matcher // reset router
 }
 
 export default router

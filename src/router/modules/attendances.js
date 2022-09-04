@@ -1,13 +1,38 @@
+
 import Layout from '@/layout'
-export default {
+
+const attendRouter = {
   path: '/attendances',
-  component: Layout,
   meta: { id: 'attendances' },
-  children: [{
-    path: '',
-    name: 'attendances',
-    // 路由懒加载 ，不用不加载，可以减轻首页的压力，提高速度
-    component: () => import('@/views/attendances/index'),
-    meta: { title: '考勤', icon: 'skill' }
-  }]
+  component: Layout,
+  // name: 'attendances',
+  children: [
+    {
+      path: '',
+      component: () => import('@/views/attendances'),
+      name: 'attendances',
+      meta: {
+        title: '考勤',
+        icon: 'excel' }
+    },
+    {
+      path: 'archiving',
+      component: () => import('@/views/attendances/historical'),
+      name: 'archiving',
+      hidden: true,
+      meta: {
+        title: '归档'
+      }
+    },
+    {
+      path: 'report/:month',
+      component: () => import('@/views/attendances/report'),
+      name: 'reports',
+      hidden: true,
+      meta: {
+        title: '报表'
+      }
+    }
+  ]
 }
+export default attendRouter
