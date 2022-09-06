@@ -9,7 +9,6 @@
       :rules="rules"
     >
       <!--离职表单-->
-      <h1>22</h1>
       <el-form-item label="离职时间" prop="end_time">
         <el-date-picker
           v-model="ruleForm.end_time"

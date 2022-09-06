@@ -25,7 +25,9 @@ Vue.use(components)
 Vue.mixin(myMixin)
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
-Vue.use(ElementUI)
+// 引人国际化语言包并全局注册，挂载到vue实例上面
+import i18n from '@/lang'
+Vue.use(ElementUI, { i18n: (key, value) => i18n.t(key, value) })
 Vue.config.productionTip = false
 
 import Print from 'vue-print-nb'
@@ -45,5 +47,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })

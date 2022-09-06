@@ -8,6 +8,8 @@
       <span class="breadBtn">体验版</span>
     </div>
     <div class="right-menu">
+      <lang class="right-menu-item" />
+      <ScreenFull class="right-menu-item" />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img
@@ -102,6 +104,7 @@ export default {
   }
 
   .right-menu {
+    display: inline;
     float: right;
     height: 100%;
     line-height: 50px;
@@ -117,6 +120,7 @@ export default {
       font-size: 18px;
       color: #5a5e66;
       vertical-align: text-bottom;
+       vertical-align: middle;
 
       &.hover-effect {
         cursor: pointer;
@@ -129,7 +133,9 @@ export default {
     }
 
     .avatar-container {
+      display: inline-block;
       margin-right: 30px;
+      margin-left: 10px;
 
       .avatar-wrapper {
         margin-top: 5px;

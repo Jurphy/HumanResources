@@ -52,7 +52,7 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: 'dashboard',
       component: () => import('@/views/dashboard/index'),
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
@@ -67,8 +67,15 @@ export const constantRoutes = [
 // 静态路由 动态路由 现在这样直接混在一起合适吗
 
 const createRouter = () => new Router({
+  mode: 'history',
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: (to, from, savePosition) => {
+    if (to.path === '/dashboard') {
+      return { y: 100 }
+    }
+    return { y: 0 }
+  },
+  base: '/hr/',
   // 临时合并
   routes: [...constantRoutes]
 })
