@@ -138,11 +138,15 @@ export default {
       showDialog: false
     }
   },
+
   computed: {
     ...mapGetters([
       'userInfo'
 
     ])
+  },
+  mounted() {
+    console.log('hhhhhhhhhhhhhhhhhhh')
   },
   methods: {
     lizhiFn() {

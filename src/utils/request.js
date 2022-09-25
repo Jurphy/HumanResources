@@ -3,7 +3,7 @@ import { Message } from 'element-ui'
 import store from '@/store'
 import router from '@/router'
 
-const TimeOut = 3600 // 定义超时时间
+const TimeOut = 36000// 定义超时时间
 
 // 是否超时
 // 超时逻辑  (当前时间  - 缓存中的时间) 是否大于 时间差
