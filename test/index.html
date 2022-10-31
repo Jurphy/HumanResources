@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./test.css">
 </head>
+
 <body>
     <nav> Scss样式 </nav>
     <div id="app">
@@ -20,5 +22,69 @@
             侧边栏
         </aside>
     </div>
+    <script>
+        const arrayLike = {
+            0: 'a',
+            1: 'b',
+            2: 'c',
+            length: 3,
+        }
+        console.log('对象》》数组', Array.from(arrayLike));
+        const str = 'jurphy'
+        console.log('字符串》》数组', Array.from(str));
+        const mySet = new Set([1, 2, 3])
+        console.log('伪数组', mySet);
+        console.log('转为数组', Array.from(mySet)) // [1, 2, 3]
+
+        // find
+        const studentList = [
+            {
+                id: 1,
+                name: 'Tom',
+                age: 12,
+
+            },
+            {
+                id: 2,
+                name: 'Jerry',
+                age: 13,
+            },
+            {
+                id: 3,
+                name: 'Bob',
+                age: 11,
+            },
+        ]
+        studentList.map(item => {
+            item.test = 1
+        })
+        console.log('studentList11', studentList);
+        const mapObj = new Map(studentList)
+        console.log('mapObj', mapObj);
+        const obj1 = {
+            a: 1,
+            b: 2,
+            c: 3,
+        }
+
+        const obj2 = {
+            b: 4,
+            c: 5,
+            d: 6,
+        }
+        console.log('合并数组', Object.assign(obj1, obj2));
+        const promise = new Promise((resolve, reject) => {
+            console.log(1);
+            console.log(2);
+        });
+        promise.then(() => {
+            console.log(3);
+        })
+        console.log(4);
+        
+
+
+    </script>
 </body>
+
 </html>
